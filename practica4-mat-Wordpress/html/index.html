@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cómo usar Docker Compose</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f4f6f8;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    h1 {
+      color: #0b5ed7;
+    }
+
+    h2 {
+      color: #0b5ed7;
+      border-bottom: 2px solid #0b5ed7;
+      padding-bottom: 5px;
+    }
+
+    code, pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+    }
+
+    code {
+      padding: 2px 6px;
+      font-size: 0.95em;
+    }
+
+    pre {
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .tip {
+      background: #e7f5ff;
+      border-left: 5px solid #0b5ed7;
+      padding: 12px 15px;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #0b5ed7;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐳 Cómo utilizar Docker Compose</h1>
+
+  <p>
+    <strong>Docker Compose</strong> permite definir y ejecutar varias aplicaciones en contenedores Docker
+    con un solo archivo de configuración: <code>docker-compose.yml</code>.
+    Es ideal para proyectos con base de datos, backend y frontend.
+  </p>
+
+  <div class="card">
+    <h2>1. Instalación</h2>
+
+    <p>
+      Docker Compose viene incluido con Docker Desktop en Windows y macOS.
+      En Linux, puedes comprobar si está instalado con:
+    </p>
+
+    <pre><code>docker compose version</code></pre>
+
+    <p>
+      Si no está instalado, sigue la documentación oficial de Docker
+      para tu distribución de Linux.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>2. Crear el archivo docker-compose.yml</h2>
+
+    <p>
+      Crea una carpeta para tu proyecto y, dentro, un archivo llamado
+      <code>docker-compose.yml</code>. Este archivo describe los servicios
+      o contenedores que quieres ejecutar.
+    </p>
+
+    <pre><code>version: "3.8"
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ejemplo123
+      MYSQL_DATABASE: mibasededatos
+    volumes:
+      - datos_mysql:/var/lib/mysql
+
+volumes:
+  datos_mysql:
+</code></pre>
+
+    <div class="tip">
+      💡 <strong>Explicación:</strong><br><br>
+      - <code>services</code>: cada contenedor que se va a crear.<br>
+      - <code>image</code>: imagen oficial de Docker que se utilizará.<br>
+      - <code>ports</code>: puerto de tu PC → puerto del contenedor.<br>
+      - <code>environment</code>: variables de configuración.<br>
+      - <code>volumes</code>: guardan datos aunque el contenedor se borre.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. Comandos básicos</h2>
+
+    <table>
+      <tr>
+        <th>Comando</th>
+        <th>Para qué sirve</th>
+      </tr>
+      <tr>
+        <td><code>docker compose up</code></td>
+        <td>Crea y arranca todos los contenedores.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose up -d</code></td>
+        <td>Los arranca en segundo plano, sin bloquear la terminal.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose down</code></td>
+        <td>Detiene y elimina los contenedores y redes creados.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose ps</code></td>
+        <td>Muestra los contenedores activos del proyecto.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose logs</code></td>
+        <td>Muestra los registros o logs de los servicios.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose logs -f</code></td>
+        <td>Muestra los logs en tiempo real.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose restart</code></td>
+        <td>Reinicia los servicios.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose stop</code></td>
+        <td>Detiene los contenedores sin eliminarlos.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose start</code></td>
+        <td>Vuelve a arrancar contenedores detenidos.</td>
+      </tr>
+      <tr>
+        <td><code>docker compose build</code></td>
+        <td>Construye imágenes definidas con un Dockerfile.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>4. Ejemplo práctico</h2>
+
+    <p>Guarda el archivo <code>docker-compose.yml</code> y ejecuta en la terminal, dentro de esa carpeta:</p>
+
+    <pre><code>docker compose up -d</code></pre>
+
+    <p>Luego abre en tu navegador:</p>
+
+    <pre><code>http://localhost:8080</code></pre>
+
+    <p>Deberías ver la página inicial de Nginx.</p>
+
+    <p>Para comprobar qué contenedores están funcionando:</p>
+
+    <pre><code>docker compose ps</code></pre>
+
+    <p>Para detener y eliminar todo lo creado:</p>
+
+    <pre><code>docker compose down</code></pre>
+  </div>
+
+  <div class="card">
+    <h2>5. Usar un Dockerfile con Compose</h2>
+
+    <p>
+      Si tu aplicación necesita una imagen propia, crea un <code>Dockerfile</code>
+      y referencia la carpeta con <code>build</code>:
+    </p>
+
+    <pre><code>services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+</code></pre>
+
+    <p>Una estructura recomendada sería:</p>
+
+    <pre><code>mi-proyecto/
+├── Dockerfile
+├── docker-compose.yml
+└── app/
+    └── index.js
+</code></pre>
+  </div>
+
+  <div class="card">
+    <h2>6. Consejos importantes</h2>
+
+    <ul>
+      <li>Usa <code>-d</code> para ejecutar los contenedores en segundo plano.</li>
+      <li>Guarda los datos importantes en <code>volumes</code>.</li>
+      <li>Usa un archivo <code>.env</code> para contraseñas y datos sensibles.</li>
+      <li>
+        Los contenedores del mismo <code>docker-compose.yml</code> pueden comunicarse
+        usando el nombre del servicio, por ejemplo <code>db:3306</code>.
+      </li>
+      <li>
+        Ejecuta siempre los comandos desde la carpeta donde está el
+        <code>docker-compose.yml</code>.
+      </li>
+    </ul>
+  </div>
+
+</body>
+</html>
